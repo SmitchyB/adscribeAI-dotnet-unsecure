@@ -1,63 +1,69 @@
-AdScribe.AI - .NET 8/C# (Vulnerable Version)
-This repository contains the .NET 8/C# stack version of the AdScribe.AI application. This version is intentionally vulnerable and serves as a test case for a university research project evaluating the effectiveness of secure coding practices and SAST (Static Analysis Security Testing) tools.
+# InputValid-dotnet-unsecure - .NET 8 Vulnerable Build (Insecure Secrets Management)
 
-Application Purpose
-AdScribe.AI is a simple marketing tool that uses the OpenAI API to generate compelling product descriptions based on a product name and user-provided keywords.
+This repository houses a specific application build that is part of a larger comparative study, "Evaluating the Effectiveness of Secure Coding Practices Across Python, MERN, and .NET 8." The experiment systematically assesses how secure coding techniques mitigate critical web application vulnerabilities—specifically improper input validation, insecure secrets management, and insecure error handling—across these three diverse development stacks. Through the development of paired vulnerable and secure application versions, this study aims to provide empirical evidence on the practical effectiveness of various security controls and the impact of architectural differences on developer effort and overall security posture.
 
-Research Context: The Vulnerability
-The primary purpose of this repository is to demonstrate an unsecure but common coding practice: hardcoded secrets.
+## Purpose
+This particular build contains the **Vulnerable Build** of the C# .NET 8 application, specifically designed to demonstrate **Insecure Secrets Management**.
 
-In this application, the OPENAI_API_KEY is written directly into the backend source code (backend/Controllers/GenerateController.cs). This is a significant security risk because it exposes the secret to anyone with access to the codebase and makes it visible in the version control history. This build is used to test whether security scanning tools can successfully detect this type of vulnerability.
+## Vulnerability Focus
+This application build explicitly demonstrates:
+* **Insecure Secrets Management:** The application contains sensitive information directly embedded within its source code.
 
-How to Run This Application
-This is a standard full-stack application with a React frontend and a .NET 8 backend.
+## Description of Vulnerability in this Build
+In this version, a critical security flaw related to secrets management is intentionally present. The **OpenAI API key** required to access the external AI service is **hardcoded directly within the `GenerateController.cs` file**. This is a highly insecure practice because:
+* The secret is exposed in plain text within the version control system.
+* Any developer with access to the codebase can immediately view and potentially misuse the API key.
+* If the source code is ever leaked (e.g., via public repositories, misconfigured servers), the secret becomes publicly available, leading to potential abuse, financial cost, or unauthorized access to the external service.
 
-Prerequisites
-.NET 8 SDK installed.
+## Setup and Running the Application
 
-Node.js and npm installed.
+### Prerequisites
+* **.NET 8 SDK:** Specifically version `8.0.411` (as enforced by the `global.json` file in this project's root).
+* Node.js and npm/yarn (for the React frontend, if testing full stack).
 
-An active OpenAI API key.
+### Steps
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    # Navigate to the specific build folder, e.g.:
+    cd InputValid-dotnet-secure/dotnet/vulnerable-secrets-management # Example subfolder for this specific build
+    ```
+2.  **Verify .NET SDK version (optional, but good practice):**
+    ```bash
+    dotnet --info
+    ```
+    Ensure it shows `Version: 8.0.411` under ".NET SDKs installed" and "SDK: Version: 8.0.411" for the host. If not, ensure `global.json` is correctly placed in this project's root directory.
+3.  **Restore dependencies:**
+    ```bash
+    dotnet restore
+    ```
+4.  **Build the application:**
+    ```bash
+    dotnet build
+    ```
+5.  **Run the application:**
+    ```bash
+    dotnet run
+    ```
+    The application will typically start on `http://localhost:5000`.
 
-Instructions
-1. Clone the Repository
-git clone <your-repo-url>
+## API Endpoints
 
-2. Set the API Key (The Unsecure Step)
-Navigate to the backend/ directory.
+### `POST /api/generate`
+* **Purpose:** Generates a product description by calling an external AI API (OpenAI). In this vulnerable build, it uses a hardcoded API key.
+* **Method:** `POST`
+* **Content-Type:** `application/json`
+* **Request Body Example (JSON):**
+    ```json
+    {
+      "productName": "Smart Watch",
+      "keywords": "fitness tracking, long battery life, stylish"
+    }
+    ```
+* **Expected Behavior:**
+    * The application will attempt to make an API call to OpenAI using the hardcoded key.
+    * If the hardcoded key is valid and has access, it will return a generated description (`200 OK`).
+    * If the hardcoded key is invalid (e.g., `FAKE_API_KEY`), it will likely return a `500 Internal Server Error` due to an API authentication failure, potentially exposing details about the attempted API call.
 
-Open the Controllers/GenerateController.cs file.
-
-Find the line const string OPENAI_API_KEY = "REPLACE_WITH_YOUR_OPENAI_API_KEY";
-
-Replace the placeholder with your actual OpenAI API key.
-
-3. Set up the Frontend (React)
-In a terminal, navigate to the frontend/ folder.
-
-Install the Node.js dependencies:
-
-npm install
-
-4. Run the Application
-You will need two separate terminals to run the application.
-
-Start the Backend:
-
-In a terminal, navigate to the backend/ directory.
-
-Run the .NET server:
-
-dotnet run
-
-The backend will start on http://localhost:5001.
-
-Start the Frontend:
-
-In your second terminal, navigate to the frontend/ directory.
-
-Run the React development server:
-
-npm start
-
-The application will open in your browser, usually at http://localhost:3000.
+## Static Analysis Tooling
+This specific build is designed to be analyzed by Static Analysis Security Testing (SAST) tools such as Semgrep and .NET Roslyn Analyzers to measure their detection capabilities for **hardcoded secrets** vulnerabilities present in this build.
