@@ -4,10 +4,23 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel> 
+    
+    <WarningsAsErrors>true</WarningsAsErrors> 
+    
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-  </ItemGroup>
+
+    <PackageReference Include="SecurityCodeScan.VS2019" Version="5.6.7" PrivateAssets="all" />
+    
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.24.0.89297" PrivateAssets="all" />
+    
+    <PackageReference Include="Meziantou.Analyzer" Version="2.0.202" PrivateAssets="all" />
+    </ItemGroup>
 
 </Project>

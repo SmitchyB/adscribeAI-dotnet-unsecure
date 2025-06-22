@@ -28,7 +28,7 @@ public class GenerateController : ControllerBase
     {
         // --- THIS IS THE INTENTIONAL VULNERABILITY (Unsecure Version) ---
         // The secret OpenAI API key is hardcoded directly in the source code.
-        const string OPENAI_API_KEY = "FAKE_API_KEY"; // Replace with your actual OpenAI API key.
+        const string OPENAI_API_KEY = "sk_live_very_secret_api_key_1234567890"; // Replace with your actual OpenAI API key.
 
 
         var prompt = $"Write a short, catchy, and professional product description for a \"{request.ProductName}\" that highlights these keywords: \"{request.Keywords}\"."; // Construct the prompt using the product name and keywords from the request.
